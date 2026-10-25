@@ -207,6 +207,12 @@ def render_html(listings: list[Listing]) -> str:
 def main() -> None:
     listings = collect_listings()
     print(f"[main] total unique listings: {len(listings)}")
+    # Zero listings almost always means Barnstormers failed to load (timeouts,
+    # a bot challenge) rather than every ad vanishing overnight - keep the
+    # last good page up instead of replacing it with an empty one.
+    if not listings and os.path.exists(OUTPUT_PATH):
+        print(f"[main] no listings scraped; keeping the existing {OUTPUT_PATH}")
+        return
     html_doc = render_html(listings)
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:

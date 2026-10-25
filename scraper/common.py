@@ -26,6 +26,8 @@ PAGE_TIMEOUT_MS = 30_000
 CHALLENGE_MAX_WAIT_MS = 25_000
 CHALLENGE_POLL_MS = 1_000
 REQUEST_DELAY_SECONDS = 1.0
+FETCH_ATTEMPTS = 2
+RETRY_DELAY_SECONDS = 5.0
 CHALLENGE_TITLE_MARKERS = ("just a moment", "attention required", "checking your browser")
 
 _playwright = None
@@ -63,7 +65,21 @@ def close_browser() -> None:
 
 
 def fetch(url: str) -> Optional[str]:
-    """Load a URL in a real browser and return the rendered HTML, or None on failure."""
+    """Load a URL in a real browser and return the rendered HTML, or None on failure.
+
+    Barnstormers occasionally stalls past the page timeout; one retry after a
+    short pause rides that out instead of losing the page for the whole run.
+    """
+    for attempt in range(1, FETCH_ATTEMPTS + 1):
+        html = _fetch_once(url)
+        if html is not None or attempt == FETCH_ATTEMPTS:
+            return html
+        print(f"  [retry] {url} (attempt {attempt + 1} of {FETCH_ATTEMPTS})")
+        time.sleep(RETRY_DELAY_SECONDS)
+    return None
+
+
+def _fetch_once(url: str) -> Optional[str]:
     page = _get_context().new_page()
     try:
         page.goto(url, wait_until="domcontentloaded", timeout=PAGE_TIMEOUT_MS)
