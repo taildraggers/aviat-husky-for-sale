@@ -231,7 +231,7 @@ EXCLUDE_KEYWORDS = [
     "trailer", "trailers", "fwf", "firewall forward",
     "raffle", "win a", "win an", "enter to win", "rental", "ferry pilot",
     "ferry service",
-    "flight training", "instruction", "insurance", "financing", "wanted",
+    "flight training", "training", "delivery", "instruction", "insurance", "financing", "wanted",
     "wtb", "consignment", "appraisal", "logistics",
 ]
 

@@ -45,11 +45,13 @@ GENERIC_SITE_TITLE_SNIPPET = "barnstormers.com find aircraft"
 
 _HUSKY_RE = re.compile(r"husky", re.IGNORECASE)
 # A-1 model code with its variant letter (A-1, A-1A, A-1B, A-1C) and, for the
-# A-1C, its engine suffix (A-1C-180, A-1C-200). Without a hyphen the letter
-# is required ("A1B"), since a bare "A1" is usually "A1 condition".
+# A-1C, its engine suffix (A-1C-180, A-1C-200). Titles come from URL slugs,
+# whose hyphens read as spaces ("Husky A 1", "Husky A1 B"), so any spacing is
+# accepted right after "Husky"; elsewhere the letter is required ("A1C200"),
+# since a bare "A1" is usually "A1 condition".
 _MODEL_RE = re.compile(
-    r"\ba\s?-\s?1([abc])?(?:\s?-?\s?(180|200))?(?!\d)(?![d-z])"
-    r"|\ba\s?1([abc])(?:\s?-?\s?(180|200))?(?!\d)(?![d-z])",
+    r"husky\s?-?\s?a\s?-?\s?1(?:\s?-?\s?([abc]))?(?:\s?-?\s?(180|200))?(?!\d)(?![a-z])"
+    r"|\ba\s?-?\s?1\s?-?\s?([abc])(?:\s?-?\s?(180|200))?(?!\d)(?![a-z])",
     re.IGNORECASE,
 )
 # Other makes. A "Husky" title naming one of these is a comparison, a part
